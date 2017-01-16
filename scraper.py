@@ -165,3 +165,4 @@ if __name__ == '__main__':
         metadata = extract_restaurant_metadata(listing)
         score_data = extract_score_data(listing)
         print(score_data)
+        print(metadata)
