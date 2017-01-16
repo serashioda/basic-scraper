@@ -79,6 +79,7 @@ def extract_score_data(elem):
 
 
 def generate_results(test=False):
+    """."""
     kwargs = {
         'Inspection_Start': '2/1/2013',
         'Inspection_End': '2/1/2015',
