@@ -136,11 +136,6 @@ def extract_restaurant_metadata(elem):
     return rdata
 
 
-# if __name__ == '__main__':
-#     test = len(sys.argv) > 1 and sys.argv[1] == 'test'
-#     for result in generate_results(test):
-#         print(result)
-
 if __name__ == '__main__':
     kwargs = {
         'Inspection_Start': '2/1/2013',
@@ -154,8 +149,6 @@ if __name__ == '__main__':
     doc = parse_source(html, encoding)
     listings = extract_data_listings(doc)
     for listing in listings[:5]:
-        metadata_rows = listing.find('tbody').find_all(has_two_tds, recursive=False)
-        for row in metadata_rows:
-            for td in row.find_all('td', recursive=False):
-                print(repr(clean_data(td)))
+        metadata = extract_restaurant_metadata(listing)
+        print(metadata)
         print()
