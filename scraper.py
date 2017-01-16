@@ -39,13 +39,6 @@ def get_inspection_page(**kwargs):
     return resp.content, resp.encoding
 
 
-def parse_source(html, encoding='utf-8'):
-    """."""
-    parsed = BeautifulSoup(html, 'html5lib', from_encoding=encoding)
-    # Note you will have to pip install html5lib
-    return parsed
-
-
 def extract_data_listings(html):
     """."""
     id_finder = re.compile(r'PR[\d]+~')
@@ -119,7 +112,45 @@ def generate_results(test=False):
         yield metadata
 
 
+def load_inspection_page(web_page):
+    """."""
+    with open(web_page, 'rb') as f:
+        data = f.read()
+
+    return data, 'utf-8'
+
+
+def parse_source(html, encoding='utf-8'):
+    """."""
+    parsed = BeautifulSoup(html, 'html5lib', from_encoding=encoding)
+    # Note you will have to pip install html5lib
+    return parsed
+
+
+# if __name__ == '__main__':
+#     test = len(sys.argv) > 1 and sys.argv[1] == 'test'
+#     for result in generate_results(test):
+#         print(result)
+
 if __name__ == '__main__':
-    test = len(sys.argv) > 1 and sys.argv[1] == 'test'
-    for result in generate_results(test):
-        print result
+    kwargs = {
+        'Inspection_Start': '2/1/2013',
+        'Inspection_End': '2/1/2015',
+        'Zip_Code': '98109'
+    }
+    if len(sys.argv) > 1 and sys.argv[1] == 'test':
+        html, encoding = load_inspection_page('inspection_page.html')
+    else:
+        html, encoding = get_inspection_page(**kwargs)
+    doc = parse_source(html, encoding)
+    listings = extract_data_listings(doc)
+    for listing in listings:
+        metadata_rows = listing.find('tbody').find_all(
+            has_two_tds, recursive=False
+        )
+        # print(len(metadata_rows))
+        for row in metadata_rows:
+            for td in row.find_all('td', recursive=False):
+                print(td.text)
+            print()  # prints a new line
+        print()
