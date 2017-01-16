@@ -4,6 +4,27 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 
+INSPECTION_DOMAIN = 'http://info.kingcounty.gov'
+INSPECTION_PATH = '/health/ehs/foodsafety/inspections/Results.aspx'
+INSPECTION_PARAMS = {
+    'Output': 'W',
+    'Business_Name': '',
+    'Business_Address': '',
+    'Longitude': '',
+    'Latitude': '',
+    'City': '',
+    'Zip_Code': '',
+    'Inspection_Type': 'All',
+    'Inspection_Start': '',
+    'Inspection_End': '',
+    'Inspection_Closed_Business': 'A',
+    'Violation_Points': '',
+    'Violation_Red_Points': '',
+    'Violation_Descr': '',
+    'Fuzzy_Search': 'N',
+    'Sort': 'H'
+}
+
 
 def get_inspection_page(**kwargs):
     """."""
@@ -99,19 +120,6 @@ def generate_results(test=False):
 
 
 if __name__ == '__main__':
-    kwargs = {
-        'Inspection_Start': '2/1/2013',
-        'Inspection_End': '2/1/2015',
-        'Zip_Code': '98109'
-    }
-
-    if len(sys.argv) > 1 and sys.argv[1] == 'test':
-        html, encoding = load_inspection_page('inspection_page.html')
-    else:
-        html, encoding = get_inspection_page(**kwargs)
-    doc = parse_source(html, encoding)
-    listings = extract_data_listings(doc)
-    for listing in listings[:5]:
-        metadata = extract_restaurant_metadata(listing)
-        score_data = extract_score_data(listing)
-        print(score_data)
+    test = len(sys.argv) > 1 and sys.argv[1] == 'test'
+    for result in generate_results(test):
+        print result
