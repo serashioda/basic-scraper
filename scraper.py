@@ -161,8 +161,7 @@ if __name__ == '__main__':
         html, encoding = get_inspection_page(**kwargs)
     doc = parse_source(html, encoding)
     listings = extract_data_listings(doc)
-    for listing in listings[:5]:
+    for listing in listings:
         metadata = extract_restaurant_metadata(listing)
-        inspection_rows = listing.find_all(is_inspection_row)
-        for row in inspection_rows:
-            print(row.text)
+        score_data = extract_score_data(listing)
+        print(score_data)
