@@ -1,4 +1,5 @@
 """Implementation of the scraper module."""
+
 import re
 import sys
 import requests
