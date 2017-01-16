@@ -127,6 +127,15 @@ def parse_source(html, encoding='utf-8'):
     return parsed
 
 
+def clean_data(td):
+    """."""
+    data = td.string
+    try:
+        return data.strip(" \n:-")
+    except AttributeError:
+        return u""
+
+
 # if __name__ == '__main__':
 #     test = len(sys.argv) > 1 and sys.argv[1] == 'test'
 #     for result in generate_results(test):
@@ -151,6 +160,6 @@ if __name__ == '__main__':
         # print(len(metadata_rows))
         for row in metadata_rows:
             for td in row.find_all('td', recursive=False):
-                print(td.text)
+                print(td.string)
             print()  # prints a new line
         print()
