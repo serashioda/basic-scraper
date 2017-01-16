@@ -163,5 +163,6 @@ if __name__ == '__main__':
     listings = extract_data_listings(doc)
     for listing in listings[:5]:
         metadata = extract_restaurant_metadata(listing)
-        print(metadata)
-        print()
+        inspection_rows = listing.find_all(is_inspection_row)
+        for row in inspection_rows:
+            print(row.text)
