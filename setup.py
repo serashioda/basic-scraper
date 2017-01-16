@@ -1,3 +1,5 @@
+"""Setup for scraper."""
+
 from setuptools import setup
 
 setup(
