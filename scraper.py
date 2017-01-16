@@ -53,21 +53,6 @@ def has_two_tds(elem):
     return is_tr and has_two
 
 
-def extract_restaurant_metadata(elem):
-    """."""
-    metadata_rows = elem.find('tbody').find_all(
-        has_two_tds, recursive=False
-    )
-    rdata = {}
-    current_label = ''
-    for row in metadata_rows:
-        key_cell, val_cell = row.find_all('td', recursive=False)
-        new_label = clean_data(key_cell)
-        current_label = new_label if new_label else current_label
-        rdata.setdefault(current_label, []).append(clean_data(val_cell))
-    return rdata
-
-
 def extract_score_data(elem):
     """."""
     inspection_rows = elem.find_all(is_inspection_row)
@@ -136,6 +121,21 @@ def clean_data(td):
         return u""
 
 
+def extract_restaurant_metadata(elem):
+    """."""
+    metadata_rows = elem.find('tbody').find_all(
+        has_two_tds, recursive=False
+    )
+    rdata = {}
+    current_label = ''
+    for row in metadata_rows:
+        key_cell, val_cell = row.find_all('td', recursive=False)
+        new_label = clean_data(key_cell)
+        current_label = new_label if new_label else current_label
+        rdata.setdefault(current_label, []).append(clean_data(val_cell))
+    return rdata
+
+
 # if __name__ == '__main__':
 #     test = len(sys.argv) > 1 and sys.argv[1] == 'test'
 #     for result in generate_results(test):
@@ -153,13 +153,9 @@ if __name__ == '__main__':
         html, encoding = get_inspection_page(**kwargs)
     doc = parse_source(html, encoding)
     listings = extract_data_listings(doc)
-    for listing in listings:
-        metadata_rows = listing.find('tbody').find_all(
-            has_two_tds, recursive=False
-        )
-        # print(len(metadata_rows))
+    for listing in listings[:5]:
+        metadata_rows = listing.find('tbody').find_all(has_two_tds, recursive=False)
         for row in metadata_rows:
             for td in row.find_all('td', recursive=False):
-                print(td.string)
-            print()  # prints a new line
+                print(repr(clean_data(td)))
         print()
